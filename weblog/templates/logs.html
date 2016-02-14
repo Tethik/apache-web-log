@@ -1,8 +1,56 @@
 {% extends "layout.html" %}
 {% block main %}
 <div class="container">
-  <h1>Latest Logs</h1>
   <div>
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="form-inline" method="get">
+          <select name="type" class="form-control">
+            <option value="uri" {% if type == "uri" %} selected {% endif %}>Url</option>
+            <option value="referrer" {% if type == "referrer" %} selected {% endif %}>Referrer</option>
+            <option value="agent" {% if type == "agent" %} selected {% endif %}>User Agent</option>
+            <option value="ip" {% if type == "ip" %} selected {% endif %}>IP</option>
+            <option value="country" {% if type == "country" %} selected {% endif %}>Country</option>
+          </select>
+          <input type="text" id="searchbar" class="form-control" placeholder="" name="value" value="{{value}}">
+          <button type="submit" class="btn btn-default">Search</button>
+        </form>
+      </div>
+      <div class="col-sm-6">
+        <nav class="right-align">
+          <ul class="pagination">
+            {% if page > 1 %}
+            <li>
+              <a href="?type={{type}}&value={{value}}&page={{page-1}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            {% endif %}
+
+            {% for p in range(page-2, page) %}
+              {% if p > 0 %}
+                <li><a href="?type={{type}}&value={{value}}&page={{p}}">{{p}}</a></li>
+              {% endif %}
+            {% endfor %}
+            <li class="active"><a href="?type={{type}}&value={{value}}&page={{page}}">{{page}}</a></li>
+            {% for p in range(page+1, page+3) %}
+              {% if p <= maxpage %}
+                <li><a href="?type={{type}}&value={{value}}&page={{p}}">{{p}}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page < maxpage %}
+            <li>
+              <a href="?type={{type}}&value={{value}}&page={{page+1}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+
     <table class="table">
       <thead>
         <tr><th>Time</th><th>Status Code</th><th>Url</th><th>Referrer</th><th>User Agent</th><th>IP</th><th>Country</th></tr>
@@ -21,6 +69,39 @@
         {% endfor %}
       </tbody>
     </table>
+
+    <div class="row">
+      <nav class="right-align">
+        <ul class="pagination">
+          {% if page > 1 %}
+          <li>
+            <a href="?type={{type}}&value={{value}}&page={{page-1}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% endif %}
+
+          {% for p in range(page-2, page) %}
+            {% if p > 0 %}
+              <li><a href="?type={{type}}&value={{value}}&page={{p}}">{{p}}</a></li>
+            {% endif %}
+          {% endfor %}
+          <li class="active"><a href="?type={{type}}&value={{value}}&page={{page}}">{{page}}</a></li>
+          {% for p in range(page+1, page+3) %}
+            {% if p <= maxpage %}
+              <li><a href="?type={{type}}&value={{value}}&page={{p}}">{{p}}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page < maxpage %}
+          <li>
+            <a href="?type={{type}}&value={{value}}&page={{page+1}}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
 {% endblock %}
