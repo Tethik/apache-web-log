@@ -60,3 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#Specific for this project.
+config.cfg
+*.db

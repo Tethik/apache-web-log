@@ -6,8 +6,10 @@ from dateutil import parser
 from datetime import datetime
 import ConfigParser
 from weblog.models import db, Visit, Setting
-import os
 import gzip
+from weblog import app
+
+
 
 # From https://github.com/lethain/apache-log-parser/blob/master/apache_parser.py
 # Modified
@@ -59,8 +61,15 @@ def iterate_files(directory, filename_pattern, old_date):
 	"""
 	all_rows = []
 
+	def key_func(x):
+		try:
+			i = int(re.search('\d+',x).group(0))
+			return i
+		except:
+			return 0
+
 	max_date = old_date
-	for fn in os.listdir(directory):
+	for fn in sorted(os.listdir(directory), key=key_func):
 		if filename_pattern not in fn:
 			continue
 
@@ -73,6 +82,8 @@ def iterate_files(directory, filename_pattern, old_date):
 				rows += 1
 
 		print(fn, rows)
+		if rows == 0:
+			break
 		db.session.commit()
 
 	return max_date
@@ -85,7 +96,6 @@ if __name__ == "__main__":
 	if s:
 		dt = parser.parse(s)
 
-	print(dt)
-	dt = iterate_files('tmplogs/', "hugallery.access.log", dt)
-	print(dt)
+	dt = iterate_files(app.config["LOG_DIRECTORY"], app.config["LOG_FILE_PATTERN"], dt)
+
 	Setting.set("LatestRowDate", str(dt))
