@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Please Authenticate</title>
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap-css/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <h3>Please authenticate to continue</h3>
+          <hr />
+          <p>{{msg}}</p>
+          <form method="POST" action="/login">
+              <div class="input-group">
+                <div class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></div>
+                <input type="password" name="password" class="form-control">
+                <span class="input-group-btn">
+                  <button class="btn btn-default">Login</button>
+                </span>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

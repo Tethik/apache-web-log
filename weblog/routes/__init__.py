@@ -5,6 +5,6 @@ from weblog import app
 def start():
     return redirect("/dashboard/weekly")
 
-
+import weblog.routes.login
 import weblog.routes.dashboard
 import weblog.routes.logs

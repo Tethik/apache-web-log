@@ -1,8 +1,10 @@
 from flask import render_template, request
 from weblog import app
 from weblog.models import Visit
+from weblog.auth import requires_auth
 
 @app.route("/logs")
+@requires_auth
 def logs():
     q = Visit.query
     type = request.args.get("type", "")

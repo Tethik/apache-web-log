@@ -1,16 +1,18 @@
 from __future__ import division
 from flask import render_template, redirect
 from weblog import app
+from weblog.auth import requires_auth
 from datetime import datetime, timedelta
 from weblog.models import Visit
 import json
 
-
 @app.route("/dashboard/")
+@requires_auth
 def dashboard_default():
     return redirect("/dashboard/weekly")
 
 @app.route("/dashboard/<time>")
+@requires_auth
 def dashboard(time):
     pages = []
     page = { "title": "merp", "count": 1322 }
