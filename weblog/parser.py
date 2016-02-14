@@ -70,11 +70,11 @@ def iterate_files(directory, filename_pattern, old_date):
 
 	max_date = old_date
 	for fn in sorted(os.listdir(directory), key=key_func):
-		if filename_pattern not in fn:
+		if not fn.startswith(filename_pattern):
 			continue
 
 		rows = 0
-		for r in parse(directory + fn):
+		for r in parse(directory + "/" + fn):
 			if r.time > old_date:
 				if r.time > max_date:
 					max_date = r.time
