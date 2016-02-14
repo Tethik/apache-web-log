@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block main %}
+<div class="container">
+  <h1>Latest Logs</h1>
+  <div>
+    <table class="table">
+      <thead>
+        <tr><th>Time</th><th>Status Code</th><th>Url</th><th>Referrer</th><th>User Agent</th><th>IP</th><th>Country</th></tr>
+      </thead>
+      <tbody>
+        {% for row in logs %}
+        <tr>
+          <td>{{row.time}}</td>
+          <td>{{row.status_code}}</td>
+          <td>{{row.uri}}</td>
+          <td>{{row.referral}}</td>
+          <td>{{row.agent}}</td>
+          <td>{{row.ip}}</td>
+          <td>{{row.country}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

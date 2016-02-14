@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap-css/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='raphael/raphael-min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='morris.js/morris.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='bootstrap-css/js/bootstrap.min.js') }}"></script>
+
+  </head>
+  <body>
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" id="brand" href="/">Dashboard</a>
+              </div>
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                      <li>
+                          <a href="/logs" id="navbar-profil">Full Logs</a>
+                      </li>
+                  </ul>
+
+                  {% if time_period %}
+                  <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{time_period}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="daily">Daily</a></li>
+                        <li><a href="weekly">Weekly</a></li>
+                        <li><a href="monthly">Monthly</a></li>
+                        <li><a href="year">Year</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                  {% endif %}
+              </div>
+
+
+              <!-- /.navbar-collapse -->
+          </div>
+          <!-- /.container -->
+      </nav>
+      {% block main %}{% endblock %}
+    </body>
+  </html>

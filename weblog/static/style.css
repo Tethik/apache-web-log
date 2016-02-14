@@ -1,0 +1,38 @@
+.ty:first-child {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.ty {
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    font-weight: 400;
+    /*color: #FFF;*/
+    background-color: transparent;
+    border: 1px solid #434857;
+}
+
+.tr {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: transparent;
+    border: 1px solid #434857;
+}
+
+.right-align {
+    float: right;
+}
+
+body {
+  padding-top: 70px;
+}
+
+.graph {
+  padding: 50px;
+  border: 1px solid #434857;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
