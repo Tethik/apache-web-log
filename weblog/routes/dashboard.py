@@ -15,13 +15,14 @@ def dashboard(time):
     pages = []
     page = { "title": "merp", "count": 1322 }
     pages.append(page)
-    d = _data(time)
+    start, end = _time_period(time)
+    d = _data(start, end)
     return render_template("dashboard.html",
         time_period=time,
         visited_pages=_visited_pages(d),
         countries=_countries(d),
         # unique_visitors_data=_unique_visitors(d, time),
-        page_views_data=_page_views(d, time))
+        page_views_data=_page_views(d, time, start, end))
 
 def _time_period(s):
     end = datetime.now()
@@ -33,8 +34,7 @@ def _time_period(s):
     }
     return options.get(s, options["weekly"]), end
 
-def _data(s):
-    start, end = _time_period(s)
+def _data(start, end):
     q = Visit.query.filter(Visit.time >= start, Visit.time <= end).all()
     return q
 
@@ -79,8 +79,7 @@ def _countries(data):
 
 def _hour_km(dt):
     # Indexed by 24 hour
-    # k = int(dt.hour)
-    v = str(datetime(year=1970, month=1, day=1, hour=dt.hour))
+    k = v = str(datetime(year=1970, month=1, day=1, hour=dt.hour))
     return k,v
 
 def _day_km(dt):
@@ -93,48 +92,55 @@ def _month_km(dt):
     k = v = str(datetime(year=dt.year, month=dt.month, day=1))
     return k,v
 
+def _hour_keys(start, end):
+    return [str(datetime(year=1970, month=1, day=1, hour=i)) for i in xrange(24)]
 
-# def _unique_visitors(data, time_period):
-#     return json.dumps(_uv_day(data))
+def _day_keys(start, end):
+    days = []
+    curr = datetime(year=start.year, month=start.month, day=start.day)
+    while curr <= end:
+        days.append(str(curr))
+        curr += timedelta(days=1)
+    return days
 
-# def _uv_day(data):
-#     # 24 hour period
-#     rows = []
-#     grp = {}
-#     now = datetime.now()
-#     for row in data:
-#         h = int(row.time.hour)
-#         if not h in grp:
-#             grp[h] = { "x": str(datetime(year=now.year, month=now.month, day=now.day, hour=h)), "visitors": 0 }
-#             rows.append(grp[h])
-#         grp[h]["visitors"] += 1
-#         # rows.append({ "x": str(row.time), "visitors": 1 })
-#
-#     return rows
+def _month_keys(start, end):
+    days = []
+    curr = datetime(year=start.year, month=start.month, day=1)
+    while curr <= end:
+        days.append(str(curr))
+        m = curr.month + 1
+        y = curr.year
+        if m > 12:
+            y += 1
+            m = 1
+        curr = datetime(year=y, month=m, day=1)
 
-def _page_views(data, time_period):
+    return days
+
+def _page_views(data, time_period, start, end):
     grp_functions = {
-        "daily": _hour_km,
-        "weekly": _day_km,
-        "monthly": _day_km,
-        "year": _month_km
+        "daily": (_hour_km, _hour_keys),
+        "weekly": (_day_km, _day_keys),
+        "monthly": (_day_km, _day_keys),
+        "year": (_month_km, _month_keys)
     }
 
-    f = grp_functions.get(time_period, _day_km)
+    f, keygen = grp_functions.get(time_period, _day_km)
 
     # 24 hour period
     rows = []
     grp = {}
-    now = datetime.now()
+
+    for k in keygen(start, end):
+        grp[k] = { "x": str(k), "views": 0, "unique": set() }
+        rows.append(grp[k])
+
     for row in data:
         k, v = f(row.time)
-        if not k in grp:
-            grp[k] = { "x": k, "views": 0, "unique": set() }
-            rows.append(grp[k])
         grp[k]["views"] += 1
         grp[k]["unique"].add(row.ip)
-        # rows.append({ "x": str(row.time), "visitors": 1 })
 
+    # Could be optimized to not save all these sets.
     for k in grp:
         grp[k]["unique_count"] = len(grp[k]["unique"])
         del grp[k]["unique"]
