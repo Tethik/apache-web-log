@@ -14,17 +14,18 @@ def dashboard_default():
 @app.route("/dashboard/<time>")
 @requires_auth
 def dashboard(time):
-    pages = []
-    page = { "title": "merp", "count": 1322 }
-    pages.append(page)
     start, end = _time_period(time)
     d = _data(start, end)
+    bots, d = _filter_bots(d)
     return render_template("dashboard.html",
         time_period=time,
         visited_pages=_visited_pages(d),
         countries=_countries(d),
-        # unique_visitors_data=_unique_visitors(d, time),
         page_views_data=_page_views(d, time, start, end))
+
+def _filter_bots(d):
+    filtered = [i for i in d if not "bot" in i.agent.lower() and not "spider" in i.agent.lower()]
+    return len(d) - len(filtered), filtered
 
 def _time_period(s):
     end = datetime.now()
@@ -37,7 +38,7 @@ def _time_period(s):
     return options.get(s, options["weekly"]), end
 
 def _data(start, end):
-    q = Visit.query.filter(Visit.time >= start, Visit.time <= end).all()
+    q = Visit.query.filter(Visit.time >= start, Visit.time <= end).order_by(Visit.time).all()
     return q
 
 def _clean_uri(uri):
@@ -67,9 +68,6 @@ def _countries(data):
     grp = {}
     total = len(data)
     for row in data:
-        # if "bot" in row.agent.lower() or "baidu" in row.agent.lower():
-        #     continue
-
         if not row.country in grp:
             r = { "name": row.country, "count": 0, "percent": 0.0 }
             grp[row.country] = r
@@ -134,18 +132,24 @@ def _page_views(data, time_period, start, end):
     grp = {}
 
     for k in keygen(start, end):
-        grp[k] = { "x": str(k), "views": 0, "unique": set() }
+        grp[k] = { "x": str(k), "views": 0, "unique": set(), "unique_count": 0 }
         rows.append(grp[k])
 
+    prev_k = None
     for row in data:
         k, v = f(row.time)
         grp[k]["views"] += 1
         grp[k]["unique"].add(row.ip)
 
-    # Could be optimized to not save all these sets.
-    for k in grp:
-        grp[k]["unique_count"] = len(grp[k]["unique"])
-        del grp[k]["unique"]
+        if prev_k != k and prev_k:
+            grp[prev_k]["unique_count"] = len(grp[prev_k]["unique"])
+            del grp[prev_k]["unique"]
 
+        prev_k = k
+
+    # Clean up leftover sets.
+    for k in keygen(start, end):
+        if "unique" in grp[k]:
+            del grp[k]["unique"]
 
     return json.dumps(rows)
