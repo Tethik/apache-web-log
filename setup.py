@@ -14,7 +14,9 @@ setup(
         'python-geoip-geolite2',
         'passlib',
         'werkzeug',
-        'python-geoip'
+        'python-geoip',
+        'pytz',
+        'python-dateutil'
     ]
     # test_suite   = "burn.tests",
 )

@@ -89,6 +89,7 @@ def iterate_files(directory, filename_pattern, old_date):
 	return max_date
 
 if __name__ == "__main__":
+	app.config.from_pyfile(os.getcwd() + "/config.cfg")
 	db.create_all()
 	s = Setting.get("LatestRowDate")
 	print(s)
