@@ -1,6 +1,8 @@
 from weblog import app
-from weblog.models import db
 import os
 
+app.config.from_pyfile(os.getcwd() + "/config.cfg")
+
+from weblog.models import db
 db.create_all()
 app.run(debug=True)

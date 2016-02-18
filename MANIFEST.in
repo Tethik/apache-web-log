@@ -1,0 +1,3 @@
+recursive-include weblog/static *
+recursive-include weblog/templates *
+recursive-include weblog/bower_components *
