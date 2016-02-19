@@ -10,7 +10,6 @@ setup(
         'Flask',
         'Flask-SQLAlchemy',
         'SQLAlchemy',
-        'Flask-Bower',
         'python-geoip-geolite2',
         'passlib',
         'werkzeug',
