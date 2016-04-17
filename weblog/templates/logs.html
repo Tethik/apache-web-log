@@ -3,7 +3,7 @@
 <div class="container">
   <div>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-8">
         <form class="form-inline" method="get">
           <select name="type" class="form-control">
             <option value="uri" {% if type == "uri" %} selected {% endif %}>Url</option>
@@ -16,10 +16,13 @@
           <div class="checkbox">
             <label for="bots"><input type="checkbox" name="bots" class="form-control" {% if include_bots %} checked {% endif %}> Include bots</label>
           </div>
+          <div class="checkbox">
+            <label for="skip404"><input type="checkbox" name="skip404" class="form-control" {% if include_404 %} checked {% endif %}> Include 404</label>
+          </div>
           <button type="submit" class="btn btn-default">Search</button>
         </form>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <nav class="right-align">
           <ul class="pagination">
             {% if page > 1 %}

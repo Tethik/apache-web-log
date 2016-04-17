@@ -10,6 +10,7 @@ def logs():
     type = request.args.get("type", "")
     value = request.args.get("value", "")
     include_bots = request.args.get("bots", False)
+    include_404 = request.args.get("skip404", False)
 
     if type in ["uri", "referral", "agent", "ip", "country"] and value != "":
         q = q.filter(getattr(Visit, type).like('%'+value+'%'))
@@ -19,8 +20,12 @@ def logs():
         q = q.filter(~Visit.agent.ilike('%bot%'))
         q = q.filter(~Visit.agent.ilike('%slurp%'))
 
+    if not include_404:
+        q = q.filter(Visit.status_code != "404")
+
     page = int(request.args.get("page", 1))
     logs = q.order_by("time desc").limit(25).offset(25*(page-1))
     maxpage = (q.count() // 25) + 1
     return render_template("logs.html", logs=logs, page=page, type=type,
-        value=value, maxpage=maxpage, include_bots=include_bots)
+        value=value, maxpage=maxpage, include_bots=include_bots,
+        include_404=include_404)
