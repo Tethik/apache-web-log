@@ -1,6 +1,6 @@
 from __future__ import division
 from flask import render_template, redirect
-from weblog import app
+from weblog import app, bots
 from weblog.auth import requires_auth
 from datetime import datetime, timedelta
 from weblog.models import Visit
@@ -24,7 +24,7 @@ def dashboard(time):
         page_views_data=_page_views(d, time, start, end))
 
 def _filter_bots(d):
-    filtered = [i for i in d if not i.agent.lower() in ["bot","spider","slurp"]]
+    filtered = [i for i in d if not i.agent.lower() in bots.bot_matching_strings]
     return len(d) - len(filtered), filtered
 
 def _time_period(s):

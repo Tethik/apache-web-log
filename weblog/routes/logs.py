@@ -1,5 +1,5 @@
 from flask import render_template, request
-from weblog import app
+from weblog import app, bots
 from weblog.models import Visit
 from weblog.auth import requires_auth
 
@@ -16,9 +16,8 @@ def logs():
         q = q.filter(getattr(Visit, type).like('%'+value+'%'))
 
     if not include_bots:
-        q = q.filter(~Visit.agent.ilike('%spider%'))
-        q = q.filter(~Visit.agent.ilike('%bot%'))
-        q = q.filter(~Visit.agent.ilike('%slurp%'))
+        for bot in bots.bot_matching_strings:
+            q = q.filter(~Visit.agent.ilike('%'+bot+'%'))        
 
     if not include_404:
         q = q.filter(Visit.status_code != "404")
