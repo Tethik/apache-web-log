@@ -24,7 +24,7 @@ def dashboard(time):
         page_views_data=_page_views(d, time, start, end))
 
 def _filter_bots(d):
-    filtered = [i for i in d if not "bot" in i.agent.lower() and not "spider" in i.agent.lower()]
+    filtered = [i for i in d if not i.agent.lower() in ["bot","spider","slurp"]]
     return len(d) - len(filtered), filtered
 
 def _time_period(s):

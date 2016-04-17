@@ -7,12 +7,15 @@
         <form class="form-inline" method="get">
           <select name="type" class="form-control">
             <option value="uri" {% if type == "uri" %} selected {% endif %}>Url</option>
-            <option value="referrer" {% if type == "referrer" %} selected {% endif %}>Referrer</option>
+            <option value="referral" {% if type == "referral" %} selected {% endif %}>Referrer</option>
             <option value="agent" {% if type == "agent" %} selected {% endif %}>User Agent</option>
             <option value="ip" {% if type == "ip" %} selected {% endif %}>IP</option>
             <option value="country" {% if type == "country" %} selected {% endif %}>Country</option>
           </select>
           <input type="text" id="searchbar" class="form-control" placeholder="" name="value" value="{{value}}">
+          <div class="checkbox">
+            <label for="bots"><input type="checkbox" name="bots" class="form-control" {% if include_bots %} checked {% endif %}> Include bots</label>
+          </div>
           <button type="submit" class="btn btn-default">Search</button>
         </form>
       </div>
