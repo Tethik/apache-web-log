@@ -6,5 +6,6 @@ bot_matching_strings = [
     "spider",
     "crawler",
     "slurp",
-    "preview"
+    "preview",
+    "chilkat"
 ]
